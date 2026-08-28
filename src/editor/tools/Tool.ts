@@ -13,6 +13,10 @@ export interface ToolContext {
   color: RGBA;
   /** Selecao ativa no momento (so leitura) - null se nao houver nenhuma. */
   selection: SelectionRect | null;
+  /** Modo do balde: 'contiguous' (padrao) preenche so a area conectada;
+   * 'global' preenche todos os pixels da cor alvo no canvas inteiro.
+   * Ignorado pelas outras ferramentas. */
+  bucketFillMode?: "contiguous" | "global";
   /** Usado pelo Conta-gotas para atualizar a cor ativa. */
   onColorPicked?: (color: RGBA) => void;
   /** Usado pela Selecao para reportar o retangulo (ou null ao desmarcar). */

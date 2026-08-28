@@ -327,7 +327,7 @@ export function EditorScreen() {
 
       {/* Corpo: ferramentas + canvas + paineis */}
       <div className="flex-1 flex min-h-0">
-        <div className="w-24 shrink-0 border-r border-line flex flex-col min-h-0">
+        <div className="w-48 shrink-0 border-r border-line flex flex-col min-h-0">
           <Toolbar
             activeTool={activeTool}
             onSelectTool={setActiveTool}
@@ -345,6 +345,8 @@ export function EditorScreen() {
               setResizeError(null);
               setShowResizeDialog(true);
             }}
+            bucketFillMode={engine?.bucketFillMode ?? "contiguous"}
+            onBucketFillModeChange={(mode) => engine?.setBucketFillMode(mode)}
           />
           <div className="p-2 border-t border-line shrink-0 flex flex-col gap-2">
             {engine && <TemplatePicker engine={engine} />}

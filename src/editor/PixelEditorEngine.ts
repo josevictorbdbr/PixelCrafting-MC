@@ -57,6 +57,7 @@ export class PixelEditorEngine {
 
   activeToolId = "pencil";
   activeColor: RGBA = [0, 0, 0, 255];
+  bucketFillMode: "contiguous" | "global" = "contiguous";
   isDirty = false;
   selection: SelectionRect | null = null;
 
@@ -96,6 +97,7 @@ export class PixelEditorEngine {
       canvas: this.activeLayer.canvas,
       color: this.activeColor,
       selection: this.selection,
+      bucketFillMode: this.bucketFillMode,
       onColorPicked: (color) => this.onColorPicked(color),
       onSelectionChange: (rect) => {
         this.selection = rect;
@@ -126,6 +128,12 @@ export class PixelEditorEngine {
 
   setActiveColor(color: RGBA): void {
     this.activeColor = color;
+  }
+
+  setBucketFillMode(mode: "contiguous" | "global"): void {
+    if (this.bucketFillMode === mode) return;
+    this.bucketFillMode = mode;
+    this.onChange();
   }
 
   pointerDown(x: number, y: number): void {

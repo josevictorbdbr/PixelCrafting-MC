@@ -21,17 +21,14 @@ interface ToolbarItem {
   id: string;
   label: string;
   Icon: LucideIcon;
-  /** "tool": fica selecionada/destacada (Lapis, Balde...). "action": acao
-   * imediata, sem estado de selecao (Desfazer, Redimensionar...). */
   kind: "tool" | "action";
 }
 
 /**
- * Categorias da toolbar (doc de referencia do usuario: icones lado a lado,
- * agrupados por categoria, em vez de uma coluna unica). "Redimensionar"
- * ainda e so a entrada na toolbar - a funcionalidade de verdade chega
- * numa proxima etapa. Labels vem do dicionario i18n (`t`), por isso essa
- * lista e montada dentro do componente, nao como constante de modulo.
+ * Categorias da toolbar. 4 colunas permitem que categorias com 4 itens
+ * (Pincéis, Transformar) ocupem uma linha inteira. "Formas" e "Selecao"
+ * foram unidas numa so categoria (2+1=3 itens) para preencher a linha
+ * sem sobrar espaco.
  */
 function buildToolbarCategories(t: Dictionary): { label: string; items: ToolbarItem[] }[] {
   return [
@@ -56,6 +53,7 @@ function buildToolbarCategories(t: Dictionary): { label: string; items: ToolbarI
       items: [
         { id: "line", label: t.editor.tools.line, Icon: Slash, kind: "tool" },
         { id: "rectangle", label: t.editor.tools.rectangle, Icon: Square, kind: "tool" },
+        { id: "selection", label: t.editor.tools.selection, Icon: SquareDashedMousePointer, kind: "tool" },
       ],
     },
     {
@@ -65,12 +63,6 @@ function buildToolbarCategories(t: Dictionary): { label: string; items: ToolbarI
         { id: "mirror-v", label: t.editor.tools.mirrorVertical, Icon: FlipVertical2, kind: "tool" },
         { id: "rotate", label: t.editor.tools.rotate, Icon: RotateCw, kind: "tool" },
         { id: "resize", label: t.editor.tools.resize, Icon: Scaling, kind: "action" },
-      ],
-    },
-    {
-      label: t.editor.toolbarCategories.selection,
-      items: [
-        { id: "selection", label: t.editor.tools.selection, Icon: SquareDashedMousePointer, kind: "tool" },
       ],
     },
   ];
@@ -84,6 +76,8 @@ interface ToolbarProps {
   canUndo: boolean;
   canRedo: boolean;
   onResize: () => void;
+  bucketFillMode: "contiguous" | "global";
+  onBucketFillModeChange: (mode: "contiguous" | "global") => void;
 }
 
 export function Toolbar({
@@ -94,6 +88,8 @@ export function Toolbar({
   canUndo,
   canRedo,
   onResize,
+  bucketFillMode,
+  onBucketFillModeChange,
 }: ToolbarProps) {
   const t = useTranslation();
   const toolbarCategories = buildToolbarCategories(t);
@@ -107,12 +103,16 @@ export function Toolbar({
 
   const isDisabled = (id: string) => (id === "undo" && !canUndo) || (id === "redo" && !canRedo);
 
+  const toggleBucketAffectAll = () => {
+    onBucketFillModeChange(bucketFillMode === "global" ? "contiguous" : "global");
+  };
+
   return (
     <nav className="flex-1 py-3 px-2 flex flex-col gap-4 overflow-y-auto">
       {toolbarCategories.map((category) => (
         <div key={category.label}>
           <h3 className="text-caption text-muted tracking-wide mb-1.5 px-0.5">{category.label}</h3>
-          <div className="grid grid-cols-2 gap-1">
+          <div className="grid grid-cols-4 gap-1">
             {category.items.map(({ id, label, Icon, kind }) => {
               const isActive = kind === "tool" && id === activeTool;
               return (
@@ -134,6 +134,21 @@ export function Toolbar({
               );
             })}
           </div>
+
+          {category.label === t.editor.toolbarCategories.drawing && activeTool === "bucket" && (
+            <button
+              type="button"
+              onClick={toggleBucketAffectAll}
+              aria-pressed={bucketFillMode === "global"}
+              className={`mt-1.5 size-9 flex items-center justify-center text-center text-[10px] leading-tight rounded-sm border transition-colors cursor-pointer ${
+                bucketFillMode === "global"
+                  ? "bg-accent/15 text-accent border-accent"
+                  : "text-muted border-line hover:text-ink hover:bg-panel"
+              }`}
+            >
+              {t.editor.tools.bucketAffectAll}
+            </button>
+          )}
         </div>
       ))}
     </nav>

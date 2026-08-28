@@ -146,6 +146,7 @@ export const en = {
       pencil: "Pencil",
       eraser: "Eraser",
       bucket: "Bucket",
+      bucketAffectAll: "Affect all",
       eyedropper: "Eyedropper",
       line: "Line",
       rectangle: "Rectangle",

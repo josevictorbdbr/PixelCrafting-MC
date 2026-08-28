@@ -1,6 +1,6 @@
 [package]
-name = "app"
-version = "0.7.0"
+name = "PixelCrafting_MC"
+version = "0.2.0"
 description = "Pixel Crafting MC - editor leve de texturas para Minecraft"
 authors = ["you"]
 license = ""

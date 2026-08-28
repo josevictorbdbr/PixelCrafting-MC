@@ -143,6 +143,7 @@ export const ptBR: Dictionary = {
       pencil: "Lápis",
       eraser: "Borracha",
       bucket: "Balde",
+      bucketAffectAll: "Afetar todos",
       eyedropper: "Conta-gotas",
       line: "Linha",
       rectangle: "Retângulo",

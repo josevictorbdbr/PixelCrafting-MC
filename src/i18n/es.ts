@@ -134,6 +134,7 @@ export const es: Dictionary = {
       pencil: "Lápiz",
       eraser: "Borrador",
       bucket: "Bote de pintura",
+      bucketAffectAll: "Afectar todos",
       eyedropper: "Cuentagotas",
       line: "Línea",
       rectangle: "Rectángulo",
