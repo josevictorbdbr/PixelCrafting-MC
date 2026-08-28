@@ -49,7 +49,6 @@ The application is currently focused on Windows and is designed to be simple, fa
 ### Upcoming Planned Features
 
 - Multiple open Editor tabs
-- Bucket Tool option to fill all pixels of the same color on the texture
 - Design Overhaul
 - Exporting the entire texture pack as a .zip ready to use on Minecraft folder.
 - Mutiple Texture selection on Project Library
