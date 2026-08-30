@@ -67,6 +67,23 @@ export const ptBR: Dictionary = {
     emptyList: (newProjectButtonLabel: string) =>
       `Nenhum projeto ainda. Clique em "${newProjectButtonLabel}" para começar.`,
     modifiedOn: (date: string) => `Modificado em ${date}`,
+    editProjectButton: "Editar Projeto",
+    editProjectDialogTitle: "Editar Projeto",
+    descriptionLabel: "Descrição",
+    descriptionPlaceholder: "Descreva seu projeto...",
+    iconLabel: "Ícone",
+    chooseIconButton: "Escolher Imagem",
+    removeIconButton: "Remover",
+  },
+  export: {
+    exportProjectButton: "Exportar Projeto",
+    dialogTitle: "Exportar Projeto",
+    versionLabel: "Versão do Minecraft",
+    miscExcludedNote:
+      'Texturas da categoria "Misc" não são incluídas, pois o Minecraft não tem uma pasta oficial para elas. Texturas de armadura precisam se chamar "<material>_layer_1" e "<material>_layer_2" (ex: "diamond_layer_1") para serem reconhecidas.',
+    zipFilterName: "Arquivo ZIP",
+    exportButton: "Exportar",
+    exporting: "Exportando...",
   },
   texture: {
     newTextureDialogTitle: "Nova Textura",
@@ -187,5 +204,7 @@ export const ptBR: Dictionary = {
     empty_layer_list: () => "Uma textura precisa ter pelo menos uma camada.",
     template_not_found: () => "Template não encontrado.",
     template_resource_dir_not_found: () => "Não foi possível localizar a pasta de templates do aplicativo.",
+    invalid_mc_version_bucket: (p: Record<string, string>) =>
+      `Faixa de versão do Minecraft não suportada: "${p.id}".`,
   },
 };

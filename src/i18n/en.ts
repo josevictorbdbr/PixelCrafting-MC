@@ -70,6 +70,23 @@ export const en = {
     emptyList: (newProjectButtonLabel: string) =>
       `No projects yet. Click "${newProjectButtonLabel}" to get started.`,
     modifiedOn: (date: string) => `Modified on ${date}`,
+    editProjectButton: "Edit Project",
+    editProjectDialogTitle: "Edit Project",
+    descriptionLabel: "Description",
+    descriptionPlaceholder: "Describe your project...",
+    iconLabel: "Icon",
+    chooseIconButton: "Choose Image",
+    removeIconButton: "Remove",
+  },
+  export: {
+    exportProjectButton: "Export Project",
+    dialogTitle: "Export Project",
+    versionLabel: "Minecraft Version",
+    miscExcludedNote:
+      'Textures in the "Misc" category are not included, since Minecraft has no official folder for them. Armor textures must be named "<material>_layer_1" and "<material>_layer_2" (e.g. "diamond_layer_1") to be recognized.',
+    zipFilterName: "ZIP Archive",
+    exportButton: "Export",
+    exporting: "Exporting...",
   },
   texture: {
     newTextureDialogTitle: "New Texture",
@@ -193,6 +210,8 @@ export const en = {
     empty_layer_list: () => "A texture must have at least one layer.",
     template_not_found: () => "Template not found.",
     template_resource_dir_not_found: () => "Could not locate the templates folder bundled with the app.",
+    invalid_mc_version_bucket: (p: Record<string, string>) =>
+      `Unsupported Minecraft version range: "${p.id}".`,
   },
 };
 

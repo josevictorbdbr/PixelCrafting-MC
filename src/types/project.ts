@@ -13,6 +13,7 @@ export interface ProjectSummary {
 export interface ProjectManifest {
   id: string;
   name: string;
+  description: string;
   version: string;
   createdAt: string;
   updatedAt: string;

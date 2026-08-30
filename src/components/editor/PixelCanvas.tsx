@@ -144,6 +144,10 @@ export function PixelCanvas({ engine, zoom, showGrid }: PixelCanvasProps) {
           engine.pointerUp(p.x, p.y);
         }}
         onPointerLeave={() => setHoverPixel(null)}
+        // Botao direito e usado pelo engine como ferramenta de desenho
+        // (ex: apagar/cor secundaria) - sem isso, o menu nativo do
+        // navegador/WebView interrompe o gesto de desenho.
+        onContextMenu={(e) => e.preventDefault()}
       />
     </div>
   );

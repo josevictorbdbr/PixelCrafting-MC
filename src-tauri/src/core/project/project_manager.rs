@@ -1,3 +1,4 @@
+use std::io::Cursor;
 use std::path::{Path, PathBuf};
 
 use crate::core::validation;
@@ -76,6 +77,45 @@ impl ProjectManager {
         let (project_dir, manifest) = Self::find_by_id(root, id)?;
         filesystem::ensure_project_structure(&project_dir)?;
         Ok(manifest)
+    }
+
+    /// Atualiza a descricao de um projeto existente e devolve o manifest
+    /// atualizado (usado pela tela de edicao do projeto).
+    pub fn update_description(
+        root: &Path,
+        id: &str,
+        description: &str,
+    ) -> Result<ProjectManifest, AppError> {
+        let (project_dir, mut manifest) = Self::find_by_id(root, id)?;
+        manifest.description = description.to_string();
+        manifest.updated_at = chrono::Utc::now().to_rfc3339();
+        filesystem::write_json_atomic(&filesystem::manifest_path(&project_dir), &manifest)?;
+        Ok(manifest)
+    }
+
+    /// Define (ou substitui) o icone do projeto. A imagem de origem e
+    /// decodificada e regravada como PNG - garante o formato certo
+    /// independente da extensao do arquivo escolhido pelo usuario.
+    pub fn set_icon(root: &Path, id: &str, source_path: &Path) -> Result<(), AppError> {
+        let project_dir = Self::dir_by_id(root, id)?;
+
+        let image = image::open(source_path)?;
+        let mut buffer = Cursor::new(Vec::new());
+        image.write_to(&mut buffer, image::ImageFormat::Png)?;
+
+        filesystem::write_bytes_atomic(&filesystem::icon_path(&project_dir), buffer.get_ref())
+    }
+
+    /// Remove o icone do projeto, se existir.
+    pub fn remove_icon(root: &Path, id: &str) -> Result<(), AppError> {
+        let project_dir = Self::dir_by_id(root, id)?;
+        filesystem::delete_icon(&project_dir)
+    }
+
+    /// Le os bytes do icone do projeto. `None` se o projeto nao tiver icone.
+    pub fn read_icon(root: &Path, id: &str) -> Result<Option<Vec<u8>>, AppError> {
+        let project_dir = Self::dir_by_id(root, id)?;
+        filesystem::read_icon(&project_dir)
     }
 
     /// Resolve a pasta de um projeto a partir do seu UUID. Usado tambem pelo

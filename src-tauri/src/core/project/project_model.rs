@@ -17,6 +17,11 @@ pub const DEFAULT_CATEGORIES: [&str; 7] = [
 pub struct ProjectManifest {
     pub id: String,
     pub name: String,
+    /// Descricao livre do projeto, editavel depois da criacao.
+    /// `#[serde(default)]` evita quebrar a leitura de project.json
+    /// gravados antes deste campo existir.
+    #[serde(default)]
+    pub description: String,
     pub version: String,
     #[serde(rename = "createdAt")]
     pub created_at: String,
@@ -33,6 +38,7 @@ impl ProjectManifest {
         Self {
             id: super::uuid_gen::generate_id(),
             name,
+            description: String::new(),
             version: "1.0.0".to_string(),
             created_at: now.clone(),
             updated_at: now,

@@ -28,3 +28,6 @@ uuid = { version = "1", features = ["v4"] }
 chrono = { version = "0.4", features = ["serde"] }
 thiserror = "2"
 image = { version = "0.25", default-features = false, features = ["png"] }
+# So o backend de deflate - nao precisamos de bzip2/zstd/aes para gerar
+# resource packs (mantem o binario leve, alinhado ao objetivo do projeto).
+zip = { version = "2", default-features = false, features = ["deflate"] }

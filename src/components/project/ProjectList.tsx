@@ -8,6 +8,9 @@ interface ProjectListProps {
   onSelect: (id: string) => void;
   onOpen: (id: string) => void;
   newProjectButtonLabel: string;
+  /** Muda depois de uma edicao (descricao/icone) para forcar os itens a
+   * buscar o icone de novo - ver comentario em ProjectListItem. */
+  iconRefreshKey: number;
 }
 
 export function ProjectList({
@@ -16,6 +19,7 @@ export function ProjectList({
   onSelect,
   onOpen,
   newProjectButtonLabel,
+  iconRefreshKey,
 }: ProjectListProps) {
   const t = useTranslation();
 
@@ -31,7 +35,11 @@ export function ProjectList({
     <div className="flex-1 overflow-y-auto divide-y divide-line">
       {projects.map((project) => (
         <ProjectListItem
-          key={project.id}
+          // O icone e buscado uma vez no mount do item (ver ProjectListItem);
+          // incluir iconRefreshKey na key forca remontar (e rebuscar) todos
+          // os itens quando um icone e editado em outro projeto da lista -
+          // custo desprezivel para o numero tipico de projetos.
+          key={`${project.id}:${iconRefreshKey}`}
           project={project}
           selected={project.id === selectedId}
           onSelect={() => onSelect(project.id)}

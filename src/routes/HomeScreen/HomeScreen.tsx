@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Settings, Plus, FolderOpen, Trash2, Loader2 } from "lucide-react";
+import { Settings, Plus, FolderOpen, Trash2, Loader2, Pencil } from "lucide-react";
 import { useUIStore } from "../../store/useUIStore";
 import { useProjectStore } from "../../store/useProjectStore";
 import { useSettingsStore } from "../../store/useSettingsStore";
@@ -9,7 +9,8 @@ import { IconButton } from "../../components/common/IconButton";
 import { Button } from "../../components/common/Button";
 import { ProjectList } from "../../components/project/ProjectList";
 import { NewProjectDialog } from "../../components/project/NewProjectDialog";
-import type { ProjectSummary } from "../../types/project";
+import { EditProjectDialog } from "../../components/project/EditProjectDialog";
+import type { ProjectManifest, ProjectSummary } from "../../types/project";
 import homeBg from "../../assets/homescreen-bg.webp";
 import {
   createProject,
@@ -36,6 +37,15 @@ export function HomeScreen() {
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
+
+  // Projeto sendo editado (manifest completo, buscado sob demanda - a
+  // lista so guarda ProjectSummary, sem description). `iconRefreshKey`
+  // forca o ProjectList a remontar os itens e buscar o icone de novo
+  // depois de uma edicao (o icone pode ter mudado no dialogo).
+  const [editingProject, setEditingProject] = useState<ProjectManifest | null>(null);
+  const [showEditProjectDialog, setShowEditProjectDialog] = useState(false);
+  const [isLoadingEditTarget, setIsLoadingEditTarget] = useState(false);
+  const [iconRefreshKey, setIconRefreshKey] = useState(0);
 
   // Ao abrir o programa: carregar os projetos existentes automaticamente.
   useEffect(() => {
@@ -92,6 +102,30 @@ export function HomeScreen() {
     } catch (err) {
       setActionError(translateError(t, err));
     }
+  };
+
+  // So busca o manifest completo (tem description, que a lista nao
+  // guarda) - nao navega para a MainScreen nem mexe no activeProject.
+  const handleEditProject = async () => {
+    if (!selectedId) return;
+    setActionError(null);
+    setIsLoadingEditTarget(true);
+    try {
+      const manifest = await openProject(selectedId);
+      setEditingProject(manifest);
+      setShowEditProjectDialog(true);
+    } catch (err) {
+      setActionError(translateError(t, err));
+    } finally {
+      setIsLoadingEditTarget(false);
+    }
+  };
+
+  const handleProjectUpdated = (updated: ProjectManifest) => {
+    setProjects((prev) =>
+      prev.map((p) => (p.id === updated.id ? { ...p, updatedAt: updated.updatedAt } : p)),
+    );
+    setIconRefreshKey((key) => key + 1);
   };
 
   return (
@@ -157,6 +191,7 @@ export function HomeScreen() {
                 onSelect={setSelectedId}
                 onOpen={handleOpenProject}
                 newProjectButtonLabel={t.home.newProjectButton}
+                iconRefreshKey={iconRefreshKey}
               />
             )}
           </div>
@@ -173,6 +208,10 @@ export function HomeScreen() {
             >
               <FolderOpen size={16} />
               {t.home.openProjectButton}
+            </Button>
+            <Button variant="ghost" onClick={handleEditProject} disabled={!selectedId || isLoadingEditTarget}>
+              <Pencil size={16} />
+              {t.project.editProjectButton}
             </Button>
             <Button variant="ghost" onClick={handleDeleteProject} disabled={!selectedId}>
               <Trash2 size={16} />
@@ -193,6 +232,13 @@ export function HomeScreen() {
           onCancel={() => setShowNewProjectDialog(false)}
           isSubmitting={isCreating}
           error={createError}
+        />
+      )}
+      {showEditProjectDialog && editingProject && (
+        <EditProjectDialog
+          project={editingProject}
+          onClose={() => setShowEditProjectDialog(false)}
+          onUpdated={handleProjectUpdated}
         />
       )}
     </div>

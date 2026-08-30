@@ -13,6 +13,8 @@ import { CategorySidebar } from "../../components/texture/CategorySidebar";
 import { CategorySection } from "../../components/texture/CategorySection";
 import { NewTextureDialog } from "../../components/texture/NewTextureDialog";
 import { ImportTextureDialog } from "../../components/texture/ImportTextureDialog";
+import { EditProjectDialog } from "../../components/project/EditProjectDialog";
+import { ExportProjectDialog } from "../../components/project/ExportProjectDialog";
 import { CATEGORIES, type CategoryId, type TextureSummary } from "../../types/texture";
 import {
   createTexture,
@@ -26,6 +28,7 @@ export function MainScreen() {
   const t = useTranslation();
   const goTo = useUIStore((s) => s.goTo);
   const activeProject = useProjectStore((s) => s.activeProject);
+  const setActiveProject = useProjectStore((s) => s.setActiveProject);
   const clearActiveProject = useProjectStore((s) => s.clearActiveProject);
   const openTextureInEditor = useEditorStore((s) => s.openTexture);
   const openSettings = useSettingsStore((s) => s.openSettings);
@@ -45,6 +48,8 @@ export function MainScreen() {
 
   const [showNewDialog, setShowNewDialog] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
+  const [showEditProjectDialog, setShowEditProjectDialog] = useState(false);
+  const [showExportProjectDialog, setShowExportProjectDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogError, setDialogError] = useState<string | null>(null);
 
@@ -184,6 +189,16 @@ export function MainScreen() {
         <div className="flex items-center gap-2 min-w-0">
           <IconButton icon={<ArrowLeft size={18} />} label={t.main.backToProjects} onClick={handleBack} />
           <h1 className="text-section-title text-ink truncate">{activeProject.name}</h1>
+          <IconButton
+            icon={<Pencil size={14} />}
+            label={t.project.editProjectButton}
+            onClick={() => setShowEditProjectDialog(true)}
+          />
+          <IconButton
+            icon={<Upload size={14} />}
+            label={t.export.exportProjectButton}
+            onClick={() => setShowExportProjectDialog(true)}
+          />
         </div>
 
         <div className="flex items-center gap-button-gap shrink-0">
@@ -291,6 +306,16 @@ export function MainScreen() {
           isSubmitting={isSubmitting}
           error={dialogError}
         />
+      )}
+      {showEditProjectDialog && (
+        <EditProjectDialog
+          project={activeProject}
+          onClose={() => setShowEditProjectDialog(false)}
+          onUpdated={setActiveProject}
+        />
+      )}
+      {showExportProjectDialog && (
+        <ExportProjectDialog project={activeProject} onClose={() => setShowExportProjectDialog(false)} />
       )}
     </div>
   );

@@ -1,7 +1,11 @@
 mod commands;
 mod core;
 
-use commands::project_commands::{create_project, delete_project, list_projects, open_project};
+use commands::export_commands::export_project_as_resource_pack;
+use commands::project_commands::{
+    create_project, delete_project, list_projects, open_project, read_project_icon,
+    remove_project_icon, set_project_icon, update_project_description,
+};
 use commands::settings_commands::{load_settings, save_settings};
 use commands::template_commands::{
     delete_custom_template, get_template_pixels, hide_builtin_template, import_custom_template, list_templates,
@@ -30,6 +34,11 @@ pub fn run() {
       create_project,
       delete_project,
       open_project,
+      update_project_description,
+      set_project_icon,
+      remove_project_icon,
+      read_project_icon,
+      export_project_as_resource_pack,
       list_textures,
       create_texture,
       delete_texture,

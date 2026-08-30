@@ -57,6 +57,9 @@ pub enum AppError {
     /// Pasta de recursos `resources/templates/` nao foi encontrada no
     /// bundle (normalmente falta registrar em `tauri.conf.json`).
     TemplateResourceDirNotFound,
+    /// `id` de faixa de versao do Minecraft desconhecido no export
+    /// (nao bate com nenhuma opcao do seletor no frontend).
+    InvalidMcVersionBucket { id: String },
 }
 
 impl AppError {
@@ -85,6 +88,7 @@ impl AppError {
             AppError::EmptyLayerList => "empty_layer_list",
             AppError::TemplateNotFound { .. } => "template_not_found",
             AppError::TemplateResourceDirNotFound => "template_resource_dir_not_found",
+            AppError::InvalidMcVersionBucket { .. } => "invalid_mc_version_bucket",
         }
     }
 
@@ -131,6 +135,9 @@ impl AppError {
                 map.insert("max", max.to_string());
             }
             AppError::TemplateNotFound { id } => {
+                map.insert("id", id.clone());
+            }
+            AppError::InvalidMcVersionBucket { id } => {
                 map.insert("id", id.clone());
             }
             _ => {}
@@ -184,5 +191,14 @@ impl From<serde_json::Error> for AppError {
 impl From<image::ImageError> for AppError {
     fn from(err: image::ImageError) -> Self {
         AppError::ImageDecodeError { detail: err.to_string() }
+    }
+}
+
+/// Erros do crate `zip` (falha ao escrever entradas do resource pack)
+/// viram Io - do ponto de vista do usuario e a mesma categoria de
+/// problema (falha ao gravar o arquivo de destino).
+impl From<zip::result::ZipError> for AppError {
+    fn from(err: zip::result::ZipError) -> Self {
+        AppError::Io { detail: err.to_string() }
     }
 }
