@@ -29,6 +29,7 @@ The application is currently focused on Windows and is designed to be simple, fa
 - Pixel art editor focused on Minecraft textures
 - Default 16×16 texture workflow
 - Support for larger texture resolutions
+- **Exporting the entire texture pack as a .zip ready to use on Minecraft folder.**
 - Layer system
 - Undo / Redo
 - Texture templates
@@ -50,7 +51,6 @@ The application is currently focused on Windows and is designed to be simple, fa
 
 - Multiple open Editor tabs
 - Design Overhaul
-- Exporting the entire texture pack as a .zip ready to use on Minecraft folder.
 - Mutiple Texture selection on Project Library
 
 ---
