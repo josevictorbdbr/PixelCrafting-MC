@@ -1,5 +1,7 @@
-# Pixel Crafting MC
-
+---
+<p align="center">
+  <img src="docs/logo/PixelCrafting_logo.png" alt="Pixel Crafting MC" width="350">
+</p>
 <p align="center">
   A lightweight pixel art editor focused on creating and organizing Minecraft textures.
 </p>
