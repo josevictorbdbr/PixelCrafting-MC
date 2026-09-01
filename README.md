@@ -1,4 +1,3 @@
----
 <p align="center">
   <img src="docs/logo/PixelCrafting_logo.png" alt="Pixel Crafting MC" width="350">
 </p>
