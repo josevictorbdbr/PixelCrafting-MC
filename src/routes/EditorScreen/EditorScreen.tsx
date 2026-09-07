@@ -11,6 +11,7 @@ import { ZoomControl } from "../../components/editor/ZoomControl";
 import { LayerPanel } from "../../components/editor/LayerPanel";
 import { ColorPalette } from "../../components/editor/ColorPalette";
 import { TemplatePicker } from "../../components/editor/TemplatePicker";
+import { PalettesPanel } from "../../components/editor/palette/PalettesPanel";
 import { ColorPickerDialog } from "../../components/editor/ColorPickerDialog";
 import { ResizeTextureDialog } from "../../components/editor/ResizeTextureDialog";
 import { SaveAsTextureDialog } from "../../components/editor/SaveAsTextureDialog";
@@ -389,11 +390,28 @@ export function EditorScreen() {
 
         <aside className="w-56 shrink-0 border-l border-line p-panel flex flex-col gap-6 overflow-y-auto">
           {engine && <LayerPanel engine={engine} />}
-          <PropertiesPanel
-            name={activeTexture.name}
-            category={activeTexture.category}
-            dimensions={engine ? { width: engine.width, height: engine.height } : null}
-          />
+          {activeProject && (
+            <PalettesPanel
+              projectId={activeProject.id}
+              activeColorHex={activeColor}
+              activeAlpha={activeAlpha}
+              onUseColor={(hex, alpha) => {
+                setActiveColor(hex);
+                setActiveAlpha(alpha);
+              }}
+            />
+          )}
+
+          {/* Info de referencia da textura (nome/categoria/resolucao) - o
+              usuario nao interage com isso, entao fica no rodape, separado
+              do resto por uma borda. */}
+          <div className="mt-auto pt-4 border-t border-line">
+            <PropertiesPanel
+              name={activeTexture.name}
+              category={activeTexture.category}
+              dimensions={engine ? { width: engine.width, height: engine.height } : null}
+            />
+          </div>
         </aside>
       </div>
 

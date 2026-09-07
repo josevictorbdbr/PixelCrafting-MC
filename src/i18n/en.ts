@@ -1,15 +1,12 @@
 import type { CategoryId } from "../types/texture";
 
-// Helper local (nao faz parte do Dictionary) para as mensagens de erro que
-// mencionam "project" ou "texture" - o backend so manda o id em ingles
-// (EntityKind::as_str() em core/error.rs), a palavra certa no idioma vem daqui.
-const entityNoun: Record<string, string> = { project: "project", texture: "texture", template: "template" };
+const entityNoun: Record<string, string> = {
+  project: "project",
+  texture: "texture",
+  template: "template",
+  palette: "palette",
+};
 
-/**
- * Fonte da verdade das chaves de traducao. pt-BR e es sao tipados contra o
- * `Dictionary` derivado deste arquivo - se uma chave faltar ou tiver o tipo
- * errado nos outros idiomas, o build quebra (ver comentario em pt-BR.ts).
- */
 export const en = {
   common: {
     cancel: "Cancel",
@@ -17,7 +14,7 @@ export const en = {
     saving: "Saving...",
     saved: "Saved",
     create: "Create",
-    creating: "Creating...",
+    creating: "Crafting...",
     loading: "Loading...",
   },
   settings: {
@@ -32,8 +29,6 @@ export const en = {
     customTemplatesHeading: "Custom Templates",
     deleteTemplateAriaLabel: (name: string) => `Delete template ${name}`,
   },
-  // "gui" e "misc" ficam sempre em ingles nos 3 idiomas (decisao do usuario:
-  // termos curtos/universais, nao vale a pena traduzir).
   categories: {
     blocks: "Blocks",
     items: "Items",
@@ -43,9 +38,6 @@ export const en = {
     particles: "Particles",
     misc: "Misc",
   } satisfies Record<CategoryId, string>,
-  // Nomes de exibicao dos templates EMBUTIDOS, por id (ver manifest.json
-  // em src-tauri/resources/templates/). Chave ausente cai no fallback (a
-  // propria id crua) - templates custom nao entram aqui, usam nome literal.
   templates: {} as Record<string, string>,
   home: {
     newProjectButton: "New Project",
@@ -150,6 +142,18 @@ export const en = {
     zoomLabel: (zoom: number) => `Zoom: ${zoom}%`,
     gridOn: "on",
     gridOff: "off",
+    //Palettes
+    palettesHeading: "PALETTES",
+    palettesEmpty: "No palettes yet.",
+    newPaletteButton: "New Palette",
+    paletteDefaultName: (n: number) => `Palette ${n}`,
+    backToPalettes: "Back",
+    paletteEmpty: "No colors in this palette yet.",
+    addCurrentColorButton: "Add current color",
+    deletePaletteButton: "Delete Palette",
+    deletePaletteConfirm: "Delete palette?",
+    useColorAriaLabel: (hex: string) => `Use color ${hex}`,
+    deleteColorAriaLabel: (hex: string) => `Delete color ${hex}`,
     toolbarCategories: {
       general: "General",
       drawing: "Drawing",
@@ -174,9 +178,6 @@ export const en = {
       selection: "Selection",
     },
   },
-  // Cada chave e uma funcao (params) => mensagem final. `params` vem direto
-  // do backend (ver AppErrorPayload em types/error.ts) - sempre string a
-  // string, entao numeros (ex. largura/altura) chegam como texto mesmo.
   errors: {
     name_empty: (p: Record<string, string>) =>
       `The ${entityNoun[p.entity] ?? p.entity} name cannot be empty.`,
@@ -212,6 +213,7 @@ export const en = {
     template_resource_dir_not_found: () => "Could not locate the templates folder bundled with the app.",
     invalid_mc_version_bucket: (p: Record<string, string>) =>
       `Unsupported Minecraft version range: "${p.id}".`,
+    palette_not_found: () => "Palette not found.",
   },
 };
 

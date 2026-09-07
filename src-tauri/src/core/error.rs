@@ -3,13 +3,15 @@ use std::collections::HashMap;
 use serde::Serialize;
 
 /// Qual tipo de entidade um erro de nome/duplicidade se refere a - carregado
-/// como parametro ("project"/"texture"/"template") para o frontend decidir
-/// a frase certa no idioma ativo, em vez do backend decidir isso em portugues.
+/// como parametro ("project"/"texture"/"template"/"palette") para o frontend
+/// decidir a frase certa no idioma ativo, em vez do backend decidir isso em
+/// portugues.
 #[derive(Debug, Clone, Copy)]
 pub enum EntityKind {
     Project,
     Texture,
     Template,
+    Palette,
 }
 
 impl EntityKind {
@@ -18,6 +20,7 @@ impl EntityKind {
             EntityKind::Project => "project",
             EntityKind::Texture => "texture",
             EntityKind::Template => "template",
+            EntityKind::Palette => "palette",
         }
     }
 }
@@ -60,6 +63,8 @@ pub enum AppError {
     /// `id` de faixa de versao do Minecraft desconhecido no export
     /// (nao bate com nenhuma opcao do seletor no frontend).
     InvalidMcVersionBucket { id: String },
+    /// `id` de paleta nao encontrado no palettes.json do projeto.
+    PaletteNotFound { id: String },
 }
 
 impl AppError {
@@ -89,6 +94,7 @@ impl AppError {
             AppError::TemplateNotFound { .. } => "template_not_found",
             AppError::TemplateResourceDirNotFound => "template_resource_dir_not_found",
             AppError::InvalidMcVersionBucket { .. } => "invalid_mc_version_bucket",
+            AppError::PaletteNotFound { .. } => "palette_not_found",
         }
     }
 
@@ -138,6 +144,9 @@ impl AppError {
                 map.insert("id", id.clone());
             }
             AppError::InvalidMcVersionBucket { id } => {
+                map.insert("id", id.clone());
+            }
+            AppError::PaletteNotFound { id } => {
                 map.insert("id", id.clone());
             }
             _ => {}

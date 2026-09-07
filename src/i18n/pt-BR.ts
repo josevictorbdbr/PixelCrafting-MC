@@ -1,17 +1,18 @@
 import type { Dictionary } from "./en";
 
-// Helpers locais (nao fazem parte do Dictionary) para compor as frases de
-// erro que mencionam projeto/textura/template, preservando a concordancia
-// do portugues ("do projeto"/"da textura"/"do template", "um projeto"/"uma
-// textura"/"um template").
-const ownerPhrase: Record<string, string> = { project: "do projeto", texture: "da textura", template: "do template" };
-const articlePhrase: Record<string, string> = { project: "um projeto", texture: "uma textura", template: "um template" };
+const ownerPhrase: Record<string, string> = {
+  project: "do projeto",
+  texture: "da textura",
+  template: "do template",
+  palette: "da paleta",
+};
+const articlePhrase: Record<string, string> = {
+  project: "um projeto",
+  texture: "uma textura",
+  template: "um template",
+  palette: "uma paleta",
+};
 
-/**
- * A anotacao `: Dictionary` (em vez de `as const`) e o que garante a
- * seguranca: com um tipo explicito, o TypeScript reporta erro tanto se
- * faltar uma chave do en.ts quanto se sobrar uma chave que nao existe la.
- */
 export const ptBR: Dictionary = {
   common: {
     cancel: "Cancelar",
@@ -19,7 +20,7 @@ export const ptBR: Dictionary = {
     saving: "Salvando...",
     saved: "Salvo",
     create: "Criar",
-    creating: "Criando...",
+    creating: "Crafitando...",
     loading: "Carregando...",
   },
   settings: {
@@ -147,6 +148,18 @@ export const ptBR: Dictionary = {
     zoomLabel: (zoom: number) => `Zoom: ${zoom}%`,
     gridOn: "ativado",
     gridOff: "desativado",
+    //Palettes
+    palettesHeading: "PALETAS",
+    palettesEmpty: "Nenhuma paleta ainda.",
+    newPaletteButton: "Nova Paleta",
+    paletteDefaultName: (n: number) => `Paleta ${n}`,
+    backToPalettes: "Voltar",
+    paletteEmpty: "Nenhuma cor nesta paleta ainda.",
+    addCurrentColorButton: "Adicionar cor atual",
+    deletePaletteButton: "Excluir Paleta",
+    deletePaletteConfirm: "Excluir paleta?",
+    useColorAriaLabel: (hex: string) => `Usar cor ${hex}`,
+    deleteColorAriaLabel: (hex: string) => `Excluir cor ${hex}`,
     toolbarCategories: {
       general: "Geral",
       drawing: "Desenho",
@@ -206,5 +219,6 @@ export const ptBR: Dictionary = {
     template_resource_dir_not_found: () => "Não foi possível localizar a pasta de templates do aplicativo.",
     invalid_mc_version_bucket: (p: Record<string, string>) =>
       `Faixa de versão do Minecraft não suportada: "${p.id}".`,
+    palette_not_found: () => "Paleta não encontrada.",
   },
 };

@@ -2,6 +2,9 @@ mod commands;
 mod core;
 
 use commands::export_commands::export_project_as_resource_pack;
+use commands::palette_commands::{
+    add_palette_color, create_palette, delete_palette, list_palettes, remove_palette_color,
+};
 use commands::project_commands::{
     create_project, delete_project, list_projects, open_project, read_project_icon,
     remove_project_icon, set_project_icon, update_project_description,
@@ -56,6 +59,11 @@ pub fn run() {
       import_custom_template,
       delete_custom_template,
       hide_builtin_template,
+      list_palettes,
+      create_palette,
+      delete_palette,
+      add_palette_color,
+      remove_palette_color,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

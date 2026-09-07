@@ -1,7 +1,17 @@
 import type { Dictionary } from "./en";
 
-const ownerPhrase: Record<string, string> = { project: "del proyecto", texture: "de la textura", template: "de la plantilla" };
-const articlePhrase: Record<string, string> = { project: "un proyecto", texture: "una textura", template: "una plantilla" };
+const ownerPhrase: Record<string, string> = {
+  project: "del proyecto",
+  texture: "de la textura",
+  template: "de la plantilla",
+  palette: "de la paleta",
+};
+const articlePhrase: Record<string, string> = {
+  project: "un proyecto",
+  texture: "una textura",
+  template: "una plantilla",
+  palette: "una paleta",
+};
 
 export const es: Dictionary = {
   common: {
@@ -138,6 +148,18 @@ export const es: Dictionary = {
     zoomLabel: (zoom: number) => `Zoom: ${zoom}%`,
     gridOn: "activado",
     gridOff: "desactivado",
+    //Palettes
+    palettesHeading: "PALETAS",
+    palettesEmpty: "Aún no hay paletas.",
+    newPaletteButton: "Nueva Paleta",
+    paletteDefaultName: (n: number) => `Paleta ${n}`,
+    backToPalettes: "Volver",
+    paletteEmpty: "Aún no hay colores en esta paleta.",
+    addCurrentColorButton: "Añadir color actual",
+    deletePaletteButton: "Eliminar Paleta",
+    deletePaletteConfirm: "¿Eliminar paleta?",
+    useColorAriaLabel: (hex: string) => `Usar color ${hex}`,
+    deleteColorAriaLabel: (hex: string) => `Eliminar color ${hex}`,
     toolbarCategories: {
       general: "General",
       drawing: "Dibujo",
@@ -197,5 +219,6 @@ export const es: Dictionary = {
     template_resource_dir_not_found: () => "No se pudo localizar la carpeta de plantillas de la aplicación.",
     invalid_mc_version_bucket: (p: Record<string, string>) =>
       `Rango de versión de Minecraft no compatible: "${p.id}".`,
+    palette_not_found: () => "Paleta no encontrada.",
   },
 };
