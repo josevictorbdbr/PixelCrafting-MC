@@ -34,7 +34,7 @@ The application is currently focused on Windows and is designed to be simple, fa
 - Layer system
 - Undo / Redo
 - Texture templates
-- Import and delete custom templates
+- Color Palettes
 - Texture import and export
 - Texture organization by category
   - Blocks
