@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Pixel Crafting MC",
-  "version": "0.7.0",
+  "version": "1.1.0",
   "identifier": "com.pixelcraftingmc",
   "build": {
     "frontendDist": "../dist",
@@ -30,18 +30,23 @@
     }
   },
   "bundle": {
-    "active": true,
-    "targets": "all",
-    "resources": ["resources/templates/*"],
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ],
-    "android": {
-      "debugApplicationIdSuffix": ".debug"
+  "active": true,
+  "targets": "all",
+  "resources": ["resources/templates/*"],
+  "icon": [
+    "icons/32x32.png",
+    "icons/128x128.png",
+    "icons/128x128@2x.png",
+    "icons/icon.icns",
+    "icons/icon.ico"
+  ],
+  "windows": {
+    "nsis": {
+      "installerIcon": "icons/icon.ico"
     }
+  },
+  "android": {
+    "debugApplicationIdSuffix": ".debug"
   }
+}
 }

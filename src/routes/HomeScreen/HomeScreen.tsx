@@ -19,7 +19,7 @@ import {
   openProject,
 } from "../../services/projectService";
 
-const APP_VERSION = "v1.0";
+const APP_VERSION = "v1.1";
 
 export function HomeScreen() {
   const t = useTranslation();
