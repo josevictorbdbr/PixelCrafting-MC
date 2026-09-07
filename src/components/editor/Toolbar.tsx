@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import {
   Undo2,
   Redo2,
@@ -78,6 +79,8 @@ interface ToolbarProps {
   onResize: () => void;
   bucketFillMode: "contiguous" | "global";
   onBucketFillModeChange: (mode: "contiguous" | "global") => void;
+  /** Renderizado logo apos a categoria "General" (ex.: cor ativa). */
+  afterGeneralCategory?: React.ReactNode;
 }
 
 export function Toolbar({
@@ -90,6 +93,7 @@ export function Toolbar({
   onResize,
   bucketFillMode,
   onBucketFillModeChange,
+  afterGeneralCategory,
 }: ToolbarProps) {
   const t = useTranslation();
   const toolbarCategories = buildToolbarCategories(t);
@@ -109,47 +113,53 @@ export function Toolbar({
 
   return (
     <nav className="flex-1 py-3 px-2 flex flex-col gap-4 overflow-y-auto">
-      {toolbarCategories.map((category) => (
-        <div key={category.label}>
-          <h3 className="text-caption text-muted tracking-wide mb-1.5 px-0.5">{category.label}</h3>
-          <div className="grid grid-cols-4 gap-1">
-            {category.items.map(({ id, label, Icon, kind }) => {
-              const isActive = kind === "tool" && id === activeTool;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  title={label}
-                  aria-label={label}
-                  disabled={isDisabled(id)}
-                  onClick={() => handleClick(id)}
-                  className={`size-9 flex items-center justify-center rounded-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${
-                    isActive
-                      ? "bg-accent/15 text-accent border border-accent"
-                      : "text-muted hover:text-ink hover:bg-panel border border-transparent"
-                  }`}
-                >
-                  <Icon size={16} />
-                </button>
-              );
-            })}
+      {toolbarCategories.map((category, index) => (
+        <Fragment key={category.label}>
+          <div>
+            <h3 className="text-caption text-muted tracking-wide mb-1.5 px-0.5">{category.label}</h3>
+            <div className="grid grid-cols-4 gap-1">
+              {category.items.map(({ id, label, Icon, kind }) => {
+                const isActive = kind === "tool" && id === activeTool;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    title={label}
+                    aria-label={label}
+                    disabled={isDisabled(id)}
+                    onClick={() => handleClick(id)}
+                    className={`size-9 flex items-center justify-center rounded-sm transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${
+                      isActive
+                        ? "bg-accent/15 text-accent border border-accent"
+                        : "text-muted hover:text-ink hover:bg-panel border border-transparent"
+                    }`}
+                  >
+                    <Icon size={16} />
+                  </button>
+                );
+              })}
+            </div>
+
+            {category.label === t.editor.toolbarCategories.drawing && activeTool === "bucket" && (
+              <button
+                type="button"
+                onClick={toggleBucketAffectAll}
+                aria-pressed={bucketFillMode === "global"}
+                className={`mt-1.5 size-9 flex items-center justify-center text-center text-[10px] leading-tight rounded-sm border transition-colors cursor-pointer ${
+                  bucketFillMode === "global"
+                    ? "bg-accent/15 text-accent border-accent"
+                    : "text-muted border-line hover:text-ink hover:bg-panel"
+                }`}
+              >
+                {t.editor.tools.bucketAffectAll}
+              </button>
+            )}
           </div>
 
-          {category.label === t.editor.toolbarCategories.drawing && activeTool === "bucket" && (
-            <button
-              type="button"
-              onClick={toggleBucketAffectAll}
-              aria-pressed={bucketFillMode === "global"}
-              className={`mt-1.5 size-9 flex items-center justify-center text-center text-[10px] leading-tight rounded-sm border transition-colors cursor-pointer ${
-                bucketFillMode === "global"
-                  ? "bg-accent/15 text-accent border-accent"
-                  : "text-muted border-line hover:text-ink hover:bg-panel"
-              }`}
-            >
-              {t.editor.tools.bucketAffectAll}
-            </button>
+          {index === 0 && afterGeneralCategory && (
+            <div className="pt-3 border-t border-line">{afterGeneralCategory}</div>
           )}
-        </div>
+        </Fragment>
       ))}
     </nav>
   );

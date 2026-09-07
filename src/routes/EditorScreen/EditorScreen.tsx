@@ -348,15 +348,14 @@ export function EditorScreen() {
             }}
             bucketFillMode={engine?.bucketFillMode ?? "contiguous"}
             onBucketFillModeChange={(mode) => engine?.setBucketFillMode(mode)}
+            afterGeneralCategory={
+              <ColorPalette
+                activeColor={activeColor}
+                activeAlpha={activeAlpha}
+                onOpenPicker={() => setShowColorPicker(true)}
+              />
+            }
           />
-          <div className="p-2 border-t border-line shrink-0 flex flex-col gap-2">
-            {engine && <TemplatePicker engine={engine} />}
-            <ColorPalette
-              activeColor={activeColor}
-              activeAlpha={activeAlpha}
-              onOpenPicker={() => setShowColorPicker(true)}
-            />
-          </div>
         </div>
 
         <div className="flex-1 flex flex-col min-h-0 bg-panel">
@@ -389,6 +388,7 @@ export function EditorScreen() {
         </div>
 
         <aside className="w-56 shrink-0 border-l border-line p-panel flex flex-col gap-6 overflow-y-auto">
+          {engine && <TemplatePicker engine={engine} />}
           {engine && <LayerPanel engine={engine} />}
           {activeProject && (
             <PalettesPanel
