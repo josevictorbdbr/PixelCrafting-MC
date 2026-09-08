@@ -65,6 +65,8 @@ export class PixelEditorEngine {
   onChange: () => void = () => {};
   /** Reatribuido pela EditorScreen para levar a cor do conta-gotas ao store. */
   onColorPicked: (color: RGBA) => void = () => {};
+  /** Reatribuido pela EditorScreen para exibir o erro de uma ferramenta instantanea rejeitada. */
+  onActionRejected: (code: string) => void = () => {};
 
   private strokeBefore: ImageData | null = null;
   private isDrawing = false;
@@ -103,6 +105,7 @@ export class PixelEditorEngine {
         this.selection = rect;
         this.onChange();
       },
+      onActionRejected: (code) => this.onActionRejected(code),
     };
   }
 
@@ -163,6 +166,23 @@ export class PixelEditorEngine {
     this.strokeBefore = null;
     if (!before) return;
     this.commitIfChanged(before);
+  }
+
+  /**
+   * Aplica uma ferramenta "instantanea" (Rotacionar, Espelhar H/V) direto -
+   * chamada pelo botao do toolbar, sem precisar de um clique no canvas.
+   * Reaproveita o mesmo dedup de historico que pointerUp usa. Se a
+   * ferramenta rejeitar a acao (ex.: Rotacionar numa regiao nao-quadrada),
+   * quem rejeitou ja avisou via onActionRejected - nada mais a fazer aqui.
+   */
+  applyInstantTool(id: string): void {
+    const tool = ToolRegistry.get(id);
+    if (!tool) return;
+
+    const before = this.activeLayer.canvas.snapshot();
+    tool.onPointerDown(0, 0, this.buildContext());
+    this.commitIfChanged(before);
+    this.onChange();
   }
 
   /** Apaga (transparente) os pixels dentro da selecao ativa, na camada ativa. */

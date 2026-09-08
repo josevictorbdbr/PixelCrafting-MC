@@ -21,6 +21,10 @@ export interface ToolContext {
   onColorPicked?: (color: RGBA) => void;
   /** Usado pela Selecao para reportar o retangulo (ou null ao desmarcar). */
   onSelectionChange?: (rect: SelectionRect | null) => void;
+  /** Usado por ferramentas instantaneas (ex.: Rotacionar) para avisar que a
+   * acao nao pode ser aplicada nas condicoes atuais. `code` e uma chave de
+   * i18n em `errors`. */
+  onActionRejected?: (code: string) => void;
 }
 
 /**

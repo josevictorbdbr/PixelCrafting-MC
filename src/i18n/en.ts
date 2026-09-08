@@ -214,6 +214,8 @@ export const en = {
     invalid_mc_version_bucket: (p: Record<string, string>) =>
       `Unsupported Minecraft version range: "${p.id}".`,
     palette_not_found: () => "Palette not found.",
+    rotate_requires_square_region: () =>
+      "Rotate only works on a square area — select a square region first, or use it on a square texture.",
   },
 };
 

@@ -68,9 +68,11 @@ export function EditorScreen() {
   const [showSaveAsDialog, setShowSaveAsDialog] = useState(false);
   const [isSavingAs, setIsSavingAs] = useState(false);
   const [saveAsError, setSaveAsError] = useState<string | null>(null);
+  const [transformError, setTransformError] = useState<string | null>(null);
 
   const engineRef = useRef<PixelEditorEngine | null>(null);
   const autosaveRef = useRef(new AutosaveService(AUTOSAVE_DELAY_MS));
+  const transformErrorTimeoutRef = useRef<number | null>(null);
 
   // Sem textura ativa (ex.: usuario chegou aqui sem passar pela MainScreen).
   useEffect(() => {
@@ -117,6 +119,16 @@ export function EditorScreen() {
         setActiveColor(rgbaToHex(color));
         setActiveAlpha(color[3]);
       };
+      newEngine.onActionRejected = (code) => {
+        if (transformErrorTimeoutRef.current) window.clearTimeout(transformErrorTimeoutRef.current);
+        // Unico codigo de rejeicao hoje. Se surgir um segundo, trocar por um
+        // Record<string, () => string> mapeando code -> mensagem.
+        const message = code === "rotate_requires_square_region"
+          ? t.errors.rotate_requires_square_region()
+          : code;
+        setTransformError(message);
+        transformErrorTimeoutRef.current = window.setTimeout(() => setTransformError(null), 3000);
+      };
       newEngine.onChange = () => {
         bump();
         if (newEngine.isDirty) {
@@ -129,7 +141,7 @@ export function EditorScreen() {
       };
       return newEngine;
     },
-    [setActiveColor, setActiveAlpha, bump, performSave],
+    [setActiveColor, setActiveAlpha, bump, performSave, t],
   );
 
   // Carrega as camadas reais da textura.
@@ -178,6 +190,20 @@ export function EditorScreen() {
   useEffect(() => {
     if (engine) engine.setActiveColor(hexToRgba(activeColor, activeAlpha));
   }, [engine, activeColor, activeAlpha]);
+
+  const handleInstantTool = useCallback(
+    (toolId: string) => {
+      engine?.applyInstantTool(toolId);
+    },
+    [engine],
+  );
+
+  // Limpa o timeout do erro de transformacao ao desmontar.
+  useEffect(() => {
+    return () => {
+      if (transformErrorTimeoutRef.current) window.clearTimeout(transformErrorTimeoutRef.current);
+    };
+  }, []);
 
   const handleSave = useCallback(async () => {
     if (!engine || !activeProject || !activeTexture) return;
@@ -346,6 +372,7 @@ export function EditorScreen() {
               setResizeError(null);
               setShowResizeDialog(true);
             }}
+            onInstantAction={handleInstantTool}
             bucketFillMode={engine?.bucketFillMode ?? "contiguous"}
             onBucketFillModeChange={(mode) => engine?.setBucketFillMode(mode)}
             afterGeneralCategory={
@@ -370,6 +397,9 @@ export function EditorScreen() {
             ) : (
               <div className="flex flex-col items-center gap-3">
                 <PixelCanvas engine={engine} zoom={zoom} showGrid={showGrid} />
+                {transformError && (
+                  <p className="text-caption text-red-400">{transformError}</p>
+                )}
                 {engine.selection && (
                   <p className="text-caption text-muted">
                     {t.editor.activeSelectionHint}

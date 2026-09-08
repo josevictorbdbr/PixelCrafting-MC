@@ -30,6 +30,10 @@ interface ToolbarItem {
  * (Pincéis, Transformar) ocupem uma linha inteira. "Formas" e "Selecao"
  * foram unidas numa so categoria (2+1=3 itens) para preencher a linha
  * sem sobrar espaco.
+ *
+ * Espelho H/V e Rotacionar sao "action" (nao "tool") - sao instantaneos,
+ * disparam no clique do botao (via onInstantAction), nao ficam
+ * "selecionados" esperando um clique no canvas.
  */
 function buildToolbarCategories(t: Dictionary): { label: string; items: ToolbarItem[] }[] {
   return [
@@ -60,14 +64,17 @@ function buildToolbarCategories(t: Dictionary): { label: string; items: ToolbarI
     {
       label: t.editor.toolbarCategories.transform,
       items: [
-        { id: "mirror-h", label: t.editor.tools.mirrorHorizontal, Icon: FlipHorizontal2, kind: "tool" },
-        { id: "mirror-v", label: t.editor.tools.mirrorVertical, Icon: FlipVertical2, kind: "tool" },
-        { id: "rotate", label: t.editor.tools.rotate, Icon: RotateCw, kind: "tool" },
+        { id: "mirror-h", label: t.editor.tools.mirrorHorizontal, Icon: FlipHorizontal2, kind: "action" },
+        { id: "mirror-v", label: t.editor.tools.mirrorVertical, Icon: FlipVertical2, kind: "action" },
+        { id: "rotate", label: t.editor.tools.rotate, Icon: RotateCw, kind: "action" },
         { id: "resize", label: t.editor.tools.resize, Icon: Scaling, kind: "action" },
       ],
     },
   ];
 }
+
+/** Ids das acoes instantaneas de "Transformar" que passam por onInstantAction em vez de onSelectTool. */
+const INSTANT_TOOL_IDS = new Set(["mirror-h", "mirror-v", "rotate"]);
 
 interface ToolbarProps {
   activeTool: string;
@@ -77,6 +84,7 @@ interface ToolbarProps {
   canUndo: boolean;
   canRedo: boolean;
   onResize: () => void;
+  onInstantAction: (toolId: string) => void;
   bucketFillMode: "contiguous" | "global";
   onBucketFillModeChange: (mode: "contiguous" | "global") => void;
   /** Renderizado logo apos a categoria "General" (ex.: cor ativa). */
@@ -91,6 +99,7 @@ export function Toolbar({
   canUndo,
   canRedo,
   onResize,
+  onInstantAction,
   bucketFillMode,
   onBucketFillModeChange,
   afterGeneralCategory,
@@ -102,6 +111,7 @@ export function Toolbar({
     if (id === "undo") onUndo();
     else if (id === "redo") onRedo();
     else if (id === "resize") onResize();
+    else if (INSTANT_TOOL_IDS.has(id)) onInstantAction(id);
     else onSelectTool(id);
   };
 

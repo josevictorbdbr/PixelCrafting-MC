@@ -220,5 +220,7 @@ export const ptBR: Dictionary = {
     invalid_mc_version_bucket: (p: Record<string, string>) =>
       `Faixa de versão do Minecraft não suportada: "${p.id}".`,
     palette_not_found: () => "Paleta não encontrada.",
+    rotate_requires_square_region: () =>
+      "Rotacionar só funciona em uma área quadrada — selecione uma região quadrada primeiro, ou use em uma textura quadrada.",
   },
 };

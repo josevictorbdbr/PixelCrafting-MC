@@ -220,5 +220,7 @@ export const es: Dictionary = {
     invalid_mc_version_bucket: (p: Record<string, string>) =>
       `Rango de versión de Minecraft no compatible: "${p.id}".`,
     palette_not_found: () => "Paleta no encontrada.",
+    rotate_requires_square_region: () =>
+      "Rotar solo funciona en un área cuadrada — selecciona una región cuadrada primero, o úsalo en una textura cuadrada.",
   },
 };
