@@ -160,6 +160,7 @@ export const en = {
       shapes: "Shapes",
       transform: "Transform",
       selection: "Selection",
+      options: "Options",
     },
     tools: {
       undo: "Undo",
@@ -176,6 +177,9 @@ export const en = {
       rotate: "Rotate",
       resize: "Resize",
       selection: "Selection",
+      moveSelection: "Move Selection",
+      brushSize: "Brush Size",
+      brushSizeLabel: (size: number) => `Size: ${size}px`,
     },
   },
   errors: {

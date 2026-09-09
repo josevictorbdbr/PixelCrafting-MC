@@ -6,6 +6,22 @@ export function regionOrWhole(canvas: PixelCanvas, selection: SelectionRect | nu
   return selection ?? { x0: 0, y0: 0, x1: canvas.width - 1, y1: canvas.height - 1 };
 }
 
+/**
+ * Pinta um quadrado de lado `size` centralizado em (cx, cy). Fora dos
+ * limites da textura e simplesmente ignorado (setPixel ja faz bounds
+ * check). size=1 pinta so o pixel (cx, cy) - mesmo comportamento de
+ * antes do pincel ter tamanho variavel.
+ */
+export function paintBrush(canvas: PixelCanvas, cx: number, cy: number, size: number, color: RGBA): void {
+  const before = -Math.floor((size - 1) / 2);
+  const after = Math.ceil((size - 1) / 2);
+  for (let dy = before; dy <= after; dy++) {
+    for (let dx = before; dx <= after; dx++) {
+      canvas.setPixel(cx + dx, cy + dy, color);
+    }
+  }
+}
+
 /** Algoritmo de Bresenham - padrao para linhas em pixel art. */
 export function drawLine(
   canvas: PixelCanvas,

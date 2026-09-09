@@ -58,6 +58,7 @@ export class PixelEditorEngine {
   activeToolId = "pencil";
   activeColor: RGBA = [0, 0, 0, 255];
   bucketFillMode: "contiguous" | "global" = "contiguous";
+  brushSize = 1;
   isDirty = false;
   selection: SelectionRect | null = null;
 
@@ -100,6 +101,7 @@ export class PixelEditorEngine {
       color: this.activeColor,
       selection: this.selection,
       bucketFillMode: this.bucketFillMode,
+      brushSize: this.brushSize,
       onColorPicked: (color) => this.onColorPicked(color),
       onSelectionChange: (rect) => {
         this.selection = rect;
@@ -123,10 +125,20 @@ export class PixelEditorEngine {
 
   setActiveTool(id: string): void {
     this.activeToolId = id;
-    if (id !== "selection" && this.selection) {
+    const preservesSelection = id === "selection" || id === "move-selection";
+    if (!preservesSelection && this.selection) {
       this.selection = null;
       this.onChange();
     }
+  }
+
+  /** Clampada entre 1 e o menor eixo da textura - um pincel maior que o eixo menor nunca caberia inteiro. */
+  setBrushSize(size: number): void {
+    const max = Math.min(this.width, this.height);
+    const clamped = Math.max(1, Math.min(Math.round(size), max));
+    if (this.brushSize === clamped) return;
+    this.brushSize = clamped;
+    this.onChange();
   }
 
   setActiveColor(color: RGBA): void {

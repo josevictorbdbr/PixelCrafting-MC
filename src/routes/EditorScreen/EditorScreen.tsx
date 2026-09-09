@@ -375,6 +375,9 @@ export function EditorScreen() {
             onInstantAction={handleInstantTool}
             bucketFillMode={engine?.bucketFillMode ?? "contiguous"}
             onBucketFillModeChange={(mode) => engine?.setBucketFillMode(mode)}
+            brushSize={engine?.brushSize ?? 1}
+            maxBrushSize={engine ? Math.min(engine.width, engine.height) : 16}
+            onBrushSizeChange={(size) => engine?.setBrushSize(size)}
             afterGeneralCategory={
               <ColorPalette
                 activeColor={activeColor}

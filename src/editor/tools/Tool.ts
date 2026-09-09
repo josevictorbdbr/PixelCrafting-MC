@@ -17,6 +17,9 @@ export interface ToolContext {
    * 'global' preenche todos os pixels da cor alvo no canvas inteiro.
    * Ignorado pelas outras ferramentas. */
   bucketFillMode?: "contiguous" | "global";
+  /** Tamanho do pincel (lado do quadrado, em pixels), usado por Lapis e
+   * Borracha. Ignorado pelas outras ferramentas. Minimo 1. */
+  brushSize: number;
   /** Usado pelo Conta-gotas para atualizar a cor ativa. */
   onColorPicked?: (color: RGBA) => void;
   /** Usado pela Selecao para reportar o retangulo (ou null ao desmarcar). */
@@ -37,3 +40,11 @@ export interface Tool {
   onPointerMove(x: number, y: number, ctx: ToolContext): void;
   onPointerUp(x: number, y: number, ctx: ToolContext): void;
 }
+
+/**
+ * Ids das ferramentas que usam brushSize (Lapis, Borracha). Fonte unica
+ * compartilhada entre o Toolbar (slider de tamanho) e o PixelCanvas
+ * (preview de hover) - evita as duas listas saírem dessincronizadas se
+ * uma ferramenta nova de pincel for adicionada.
+ */
+export const BRUSH_SIZE_TOOL_IDS: ReadonlySet<string> = new Set(["pencil", "eraser"]);

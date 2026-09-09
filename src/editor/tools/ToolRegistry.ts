@@ -4,6 +4,7 @@ import { EraserTool } from "./EraserTool";
 import { BucketTool } from "./BucketTool";
 import { EyedropperTool } from "./EyedropperTool";
 import { SelectionTool } from "./SelectionTool";
+import { MoveSelectionTool } from "./MoveSelectionTool";
 import { LineTool } from "./LineTool";
 import { RectangleTool } from "./RectangleTool";
 import { MirrorHorizontalTool } from "./MirrorHorizontalTool";
@@ -18,6 +19,7 @@ import { RotateTool } from "./RotateTool";
  * Etapa 6a: Lapis, Borracha. Etapa 6b: Balde, Conta-gotas, Selecao.
  * Etapa 6c: Linha, Retangulo, Espelhos, Rotacionar - todas as 10
  * ferramentas da v1 registradas.
+ * Etapa 6d: Mover Selecao.
  */
 class ToolRegistryImpl {
   private tools = new Map<string, Tool>();
@@ -37,6 +39,7 @@ ToolRegistry.register(new EraserTool());
 ToolRegistry.register(new BucketTool());
 ToolRegistry.register(new EyedropperTool());
 ToolRegistry.register(new SelectionTool());
+ToolRegistry.register(new MoveSelectionTool());
 ToolRegistry.register(new LineTool());
 ToolRegistry.register(new RectangleTool());
 ToolRegistry.register(new MirrorHorizontalTool());

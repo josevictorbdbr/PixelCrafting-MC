@@ -166,6 +166,7 @@ export const es: Dictionary = {
       shapes: "Formas",
       transform: "Transformar",
       selection: "Selección",
+      options: "Opciones",
     },
     tools: {
       undo: "Deshacer",
@@ -182,6 +183,9 @@ export const es: Dictionary = {
       rotate: "Rotar",
       resize: "Redimensionar",
       selection: "Selección",
+      moveSelection: "Mover Selección",
+      brushSize: "Tamaño del Pincel",
+      brushSizeLabel: (size: number) => `Tamaño: ${size}px`,
     },
   },
   errors: {

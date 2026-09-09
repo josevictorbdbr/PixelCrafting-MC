@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PixelEditorEngine } from "../../editor/PixelEditorEngine";
+import { BRUSH_SIZE_TOOL_IDS } from "../../editor/tools/Tool";
 
 interface PixelCanvasProps {
   engine: PixelEditorEngine;
@@ -64,14 +65,21 @@ export function PixelCanvas({ engine, zoom, showGrid }: PixelCanvasProps) {
 
     // Destaque sutil (cor de destaque do tema) no pixel abaixo do mouse -
     // so contorno, sem preencher, para nao escurecer/colorir o pixel real.
+    // Para Lapis/Borracha, acompanha o tamanho do pincel (quadrado
+    // centralizado no cursor, mesma logica de geometry.ts:paintBrush).
     if (hoverPixel) {
+      const brushSize = BRUSH_SIZE_TOOL_IDS.has(engine.activeToolId) ? engine.brushSize : 1;
+      const before = -Math.floor((brushSize - 1) / 2);
+      const outlineX = hoverPixel.x + before;
+      const outlineY = hoverPixel.y + before;
+
       ctx.strokeStyle = "rgba(34,211,238,0.8)";
       ctx.lineWidth = 1;
       ctx.strokeRect(
-        hoverPixel.x * pixelSize + 0.5,
-        hoverPixel.y * pixelSize + 0.5,
-        pixelSize - 1,
-        pixelSize - 1,
+        outlineX * pixelSize + 0.5,
+        outlineY * pixelSize + 0.5,
+        brushSize * pixelSize - 1,
+        brushSize * pixelSize - 1,
       );
     }
 

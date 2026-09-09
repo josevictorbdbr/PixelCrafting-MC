@@ -131,7 +131,7 @@ export function PalettesPanel({ projectId, activeColorHex, activeAlpha, onUseCol
           {error && <p className="text-caption text-red-400 mb-2">{error}</p>}
 
           {!palettes ? (
-            <div className="flex items-center gap-2 text-muted text-caption">
+            <div className="flex items-center gap-3 text-muted text-caption">
               <Loader2 size={14} className="animate-spin" />
               {t.common.loading}
             </div>

@@ -166,6 +166,7 @@ export const ptBR: Dictionary = {
       shapes: "Formas",
       transform: "Transformar",
       selection: "Seleção",
+      options: "Opções",
     },
     tools: {
       undo: "Desfazer",
@@ -182,6 +183,9 @@ export const ptBR: Dictionary = {
       rotate: "Rotacionar",
       resize: "Redimensionar",
       selection: "Seleção",
+      moveSelection: "Mover Seleção",
+      brushSize: "Tamanho do Pincel",
+      brushSizeLabel: (size: number) => `Tamanho: ${size}px`,
     },
   },
   errors: {

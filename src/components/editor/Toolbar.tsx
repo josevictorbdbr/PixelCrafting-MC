@@ -8,6 +8,7 @@ import {
   Pipette,
   Slash,
   Square,
+  Move,
   FlipHorizontal2,
   FlipVertical2,
   RotateCw,
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "../../i18n/useTranslation";
 import type { Dictionary } from "../../i18n/en";
+import { BRUSH_SIZE_TOOL_IDS } from "../../editor/tools/Tool";
 
 interface ToolbarItem {
   id: string;
@@ -27,9 +29,8 @@ interface ToolbarItem {
 
 /**
  * Categorias da toolbar. 4 colunas permitem que categorias com 4 itens
- * (Pincéis, Transformar) ocupem uma linha inteira. "Formas" e "Selecao"
- * foram unidas numa so categoria (2+1=3 itens) para preencher a linha
- * sem sobrar espaco.
+ * (Pincéis, Formas/Selecao, Transformar) ocupem uma linha inteira.
+ * "Formas" e "Selecao" foram unidas numa so categoria (2+2=4 itens).
  *
  * Espelho H/V e Rotacionar sao "action" (nao "tool") - sao instantaneos,
  * disparam no clique do botao (via onInstantAction), nao ficam
@@ -59,6 +60,7 @@ function buildToolbarCategories(t: Dictionary): { label: string; items: ToolbarI
         { id: "line", label: t.editor.tools.line, Icon: Slash, kind: "tool" },
         { id: "rectangle", label: t.editor.tools.rectangle, Icon: Square, kind: "tool" },
         { id: "selection", label: t.editor.tools.selection, Icon: SquareDashedMousePointer, kind: "tool" },
+        { id: "move-selection", label: t.editor.tools.moveSelection, Icon: Move, kind: "tool" },
       ],
     },
     {
@@ -87,6 +89,9 @@ interface ToolbarProps {
   onInstantAction: (toolId: string) => void;
   bucketFillMode: "contiguous" | "global";
   onBucketFillModeChange: (mode: "contiguous" | "global") => void;
+  brushSize: number;
+  maxBrushSize: number;
+  onBrushSizeChange: (size: number) => void;
   /** Renderizado logo apos a categoria "General" (ex.: cor ativa). */
   afterGeneralCategory?: React.ReactNode;
 }
@@ -102,6 +107,9 @@ export function Toolbar({
   onInstantAction,
   bucketFillMode,
   onBucketFillModeChange,
+  brushSize,
+  maxBrushSize,
+  onBrushSizeChange,
   afterGeneralCategory,
 }: ToolbarProps) {
   const t = useTranslation();
@@ -120,6 +128,10 @@ export function Toolbar({
   const toggleBucketAffectAll = () => {
     onBucketFillModeChange(bucketFillMode === "global" ? "contiguous" : "global");
   };
+
+  const showBucketOptions = activeTool === "bucket";
+  const showBrushSizeOptions = BRUSH_SIZE_TOOL_IDS.has(activeTool);
+  const showOptionsCategory = showBucketOptions || showBrushSizeOptions;
 
   return (
     <nav className="flex-1 py-3 px-2 flex flex-col gap-4 overflow-y-auto">
@@ -149,21 +161,6 @@ export function Toolbar({
                 );
               })}
             </div>
-
-            {category.label === t.editor.toolbarCategories.drawing && activeTool === "bucket" && (
-              <button
-                type="button"
-                onClick={toggleBucketAffectAll}
-                aria-pressed={bucketFillMode === "global"}
-                className={`mt-1.5 size-9 flex items-center justify-center text-center text-[10px] leading-tight rounded-sm border transition-colors cursor-pointer ${
-                  bucketFillMode === "global"
-                    ? "bg-accent/15 text-accent border-accent"
-                    : "text-muted border-line hover:text-ink hover:bg-panel"
-                }`}
-              >
-                {t.editor.tools.bucketAffectAll}
-              </button>
-            )}
           </div>
 
           {index === 0 && afterGeneralCategory && (
@@ -171,6 +168,42 @@ export function Toolbar({
           )}
         </Fragment>
       ))}
+
+      {showOptionsCategory && (
+        <div>
+          <h3 className="text-caption text-muted tracking-wide mb-1.5 px-0.5">{t.editor.toolbarCategories.options}</h3>
+
+          {showBucketOptions && (
+            <button
+              type="button"
+              onClick={toggleBucketAffectAll}
+              aria-pressed={bucketFillMode === "global"}
+              className={`size-9 flex items-center justify-center text-center text-[10px] leading-tight rounded-sm border transition-colors cursor-pointer ${
+                bucketFillMode === "global"
+                  ? "bg-accent/15 text-accent border-accent"
+                  : "text-muted border-line hover:text-ink hover:bg-panel"
+              }`}
+            >
+              {t.editor.tools.bucketAffectAll}
+            </button>
+          )}
+
+          {showBrushSizeOptions && (
+            <div className="px-0.5 flex flex-col gap-1">
+              <input
+                type="range"
+                min={1}
+                max={maxBrushSize}
+                value={brushSize}
+                onChange={(e) => onBrushSizeChange(Number(e.target.value))}
+                aria-label={t.editor.tools.brushSize}
+                className="w-full accent-accent cursor-pointer"
+              />
+              <span className="text-caption text-muted text-center">{t.editor.tools.brushSizeLabel(brushSize)}</span>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
